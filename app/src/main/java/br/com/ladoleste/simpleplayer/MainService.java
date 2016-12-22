@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Anderson Silva on 22/12/2016.
+ * Criado por Anderson Silva em 22/12/2016.
  */
 public class MainService extends Service {
 //    private static final String ACTION_PLAY = "com.example.action.PLAY";
@@ -33,7 +33,8 @@ public class MainService extends Service {
     MediaPlayer mediaPlayer = null;
     private List<String> files = new ArrayList<>();
 
-    protected BroadcastReceiver playerReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver playerReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("STOP")) {
@@ -77,7 +78,6 @@ public class MainService extends Service {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(getApplicationContext(), myUri);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(120000);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -94,18 +94,15 @@ public class MainService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         registerReceiver(playerReceiver, new IntentFilter("STOP"));
+
         PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent("STOP"), PendingIntent.FLAG_UPDATE_CURRENT);
 
         registerReceiver(playerReceiver, new IntentFilter("NEXT"));
         PendingIntent contentIntent2 = PendingIntent.getBroadcast(this, 0, new Intent("NEXT"), PendingIntent.FLAG_UPDATE_CURRENT);
 
-//        Intent thisIntent = new Intent(this, MainService.class);
-//        thisIntent.putExtra("startId", startId);
-//        PendingIntent thisService = PendingIntent.getService(this, 0, thisIntent, 0);
+        NotificationCompat.Action actionStop = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_close_clear_cancel, "Stop", contentIntent).build();
 
-        NotificationCompat.Action action1 = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_close_clear_cancel, "Stop", contentIntent).build();
-
-        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_add, "Next", contentIntent2).build();
+        NotificationCompat.Action actionNext = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_add, "Next", contentIntent2).build();
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Simple Player")
@@ -113,8 +110,8 @@ public class MainService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setTicker("ticker text")
-                .addAction(action1)
-                .addAction(action2)
+                .addAction(actionStop)
+                .addAction(actionNext)
                 .build();
 
         startForeground(36, notification);
@@ -122,10 +119,17 @@ public class MainService extends Service {
 
     @Override
     public void onDestroy() {
-        mediaPlayer.release();
-        mediaPlayer = null;
-        unregisterReceiver(playerReceiver);
-        playerReceiver = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        if (playerReceiver != null) {
+            try {
+                unregisterReceiver(playerReceiver);
+            } catch (IllegalArgumentException ignored) {
+            }
+            playerReceiver = null;
+        }
         super.onDestroy();
     }
 
