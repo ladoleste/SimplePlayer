@@ -17,17 +17,21 @@ public class MainActivity extends AppCompatActivity {
         init(null);
     }
 
-    protected void init(View view) {
+    protected void init(@SuppressWarnings("UnusedParameters") View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
         } else {
-            startService(new Intent(this, MainService.class));
+            Intent intent = new Intent(this, MainService.class);
+            stopService(intent);
+            startService(intent);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        startService(new Intent(this, MainService.class));
+        Intent intent = new Intent(this, MainService.class);
+        stopService(intent);
+        startService(intent);
     }
 }

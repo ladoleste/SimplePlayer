@@ -57,8 +57,13 @@ public class MainService extends Service {
     void play() {
 
         try {
-            Uri myUri = Uri.parse(files.remove(0));
 
+            if (files.size() == 0) {
+                stopSelf();
+                return;
+            }
+
+            Uri myUri = Uri.parse(files.remove(0));
 
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(this, myUri);
