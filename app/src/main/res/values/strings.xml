@@ -2,4 +2,6 @@
     <string name="app_name">Simple Player</string>
     <string name="play">Play</string>
     <string name="stop">Stop</string>
+    <string name="sorry">Sorry, we cannot access your music without this permission</string>
+    <string name="next">Next</string>
 </resources>

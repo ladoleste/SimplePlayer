@@ -2,4 +2,6 @@
     <string name="app_name">Simple Player</string>
     <string name="play">Tocar</string>
     <string name="stop">Parar</string>
+    <string name="sorry">Desculpe, mas não é possível tocar músicas sem essa permissão</string>
+    <string name="next">Próxima</string>
 </resources>

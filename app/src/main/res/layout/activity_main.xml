@@ -9,6 +9,11 @@
         android:layout_height="match_parent"
         tools:context="br.com.ladoleste.simpleplayer.MainActivity">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rc_songs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <Button
             android:id="@+id/bt_play"
             android:layout_width="88dp"
